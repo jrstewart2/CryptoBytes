@@ -34,7 +34,7 @@ public class SecurityConfig {
                         .anyRequest()
                         .authenticated()
                 ).formLogin().and().httpBasic().and().logout().and()
-                //.oauth2Login().and()
+                .oauth2Login().and()
                 .build();
     }
 
