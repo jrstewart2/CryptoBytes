@@ -38,7 +38,7 @@ public class PortfolioController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @PutMapping("/{id}")
+    @PatchMapping("/{id}")
     public void updateCoin(@PathVariable String id,
                            @RequestBody Portfolio portfolio) {
         portfolioService.updateCoin(id, portfolio);
