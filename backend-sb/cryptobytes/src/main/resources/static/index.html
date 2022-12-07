@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+<meta charset="UTF-8" />
+<title>Crypto Portfolio</title>
+<link rel="stylesheet" type="text/css" href="http://cdn.jsdelivr.net/webjars/bootstrap/4.1.0/css/bootstrap.min.css" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}" />
+<link rel="stylesheet" type="text/css" href="../css/portfolio.css" th:href="@{css/portfolio.css}" />
+<script src="http://cdn.jsdelivr.net/webjars/bootstrap/4.1.0/js/bootstrap.min.js" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+<script src="http://cdn.jsdelivr.net/webjars/jquery/3.3.1/jquery.min.js" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<style>
+	.crypt_nav {
+		background: #2c2c2c;
+		color: white;
+		font-family: fantasy;
+	}
+	.container {
+		background: #2c2c2c;
+		color: orange;
+		font-family: fantasy;
+	}
+	.mainPageLogo {
+		top: 50%;
+		left: 50%;
+		position: absolute;
+	}
+</style>
+</head>
+
+<body>
+	<nav class="navbar navbar-expand-sm  navbar-light crypt_nav">
+	  <div class="container-fluid">
+    	<div class="navbar-header">
+			<img src="img/logo-nav.png">
+
+    	</div>
+		<ul class="nav navbar-nav">		
+
+					<li class="nav-item">
+						<a class="nav-link" href="/login">Login</a>
+					</li>
+		</ul>
+					
+		</div>
+	</nav>
+
+	<div class="container">
+		<h3>Welcome to CryptoBytes - your online Crypto tracker</h3>
+		<img class="mainPageLogo" src="img/logo-main.png">
+	</div>
+</body>
+</html>

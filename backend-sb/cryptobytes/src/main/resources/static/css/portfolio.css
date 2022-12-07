@@ -1,0 +1,52 @@
+.crypt_nav {
+    background: #2c2c2c;
+    color: white;
+    font-family: fantasy;
+}
+.container {
+    background: #2c2c2c;
+    color: orange;
+    font-family: fantasy;
+    height: 100%;
+    width: auto;
+}
+.mainPageLogo {
+    top: 50%;
+    left: 50%;
+    position: absolute;
+}
+
+.table-hover tbody tr:hover td, .table-hover tbody tr:hover th {
+  background-color: #2c2c2c;
+}
+
+.add_trans_div {
+	border: thin;
+	background-color: #c6d98c;
+}
+
+.signup_btn {
+    background-color: orange;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+}
+
+.signup_btn:hover {
+    opacity:1;
+}
+
+.signin {
+    background-color: orange;
+    color: white;
+    padding: 14px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+}
