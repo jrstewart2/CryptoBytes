@@ -16,12 +16,15 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configurers.oauth2.server.resource.OAuth2ResourceServerConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import stewart.jonathan.CryptoBytes.service.CustomUserDetailService;
 
 @Configuration
 @EnableWebSecurity
@@ -29,15 +32,18 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfig {
 
     private final RsaKeyProperties rsaKeys;
+    private final CustomUserDetailService customUserDetailService;
+    //    private final UserDetailsService userDetailsService;
+//    private final UserAuthentication userAuthentication;
+
 
     @Autowired
-    public SecurityConfig(RsaKeyProperties rsaKeys) {
+    public SecurityConfig(RsaKeyProperties rsaKeys, CustomUserDetailService customUserDetailService) {
         this.rsaKeys = rsaKeys;
+        this.customUserDetailService = customUserDetailService;
     }
-//    private final UserDetailsService userDetailsService;
-//    private final UserAuthentication userAuthentication;
-//    private final PasswordHasher passwordHasher;
-//
+
+
 //    @Autowired
 //    public SecurityConfig(UserDetailsService userDetailsService, UserAuthentication userAuthentication, PasswordHasher passwordHasher) {
 //        this.userDetailsService = userDetailsService;
@@ -74,16 +80,24 @@ public class SecurityConfig {
                                 //.antMatchers("/api/**").permitAll()
                         //.antMatchers("/api/portfolio").hasAnyRole("USER", "ADMIN")
                         //.antMatchers("/api/users").hasAnyRole("ADMIN")
+                        .antMatchers("/api/users/**").permitAll()
                         .anyRequest().authenticated()
                 )
+                .userDetailsService(customUserDetailService)
                 .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
-                .formLogin().and()
+                .formLogin()
+                .and()
                 .httpBasic(Customizer.withDefaults())
                 //.logout().and()
                 //.oauth2Login().and()
+                .headers(headers -> headers.frameOptions().sameOrigin())
                 .build();
     }
 
+    @Bean
+    PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
 
     //   @Bean
@@ -98,15 +112,15 @@ public class SecurityConfig {
 //        return source;
 //    }
 
-        @Bean
-    public InMemoryUserDetailsManager user() {
-        return new InMemoryUserDetailsManager(
-                User.withUsername("admin")
-                        .password("{noop}password")
-                        .authorities("read")
-                        .roles("ADMIN")
-                        .build()
-        );
-    }
+//    @Bean
+//    public InMemoryUserDetailsManager user() {
+//        return new InMemoryUserDetailsManager(
+//                User.withUsername("admin")
+//                        .password("{noop}password")
+//                        .authorities("read")
+//                        .roles("ADMIN")
+//                        .build()
+//        );
+//    }
 
 }

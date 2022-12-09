@@ -1,8 +1,8 @@
 package stewart.jonathan.CryptoBytes.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import stewart.jonathan.CryptoBytes.utilities.PasswordHasher;
 import stewart.jonathan.CryptoBytes.model.User;
 import stewart.jonathan.CryptoBytes.repository.UserRepository;
 
@@ -15,12 +15,12 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordHasher passwordHasher;
+    private final PasswordEncoder encoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordHasher passwordHasher) {
+    public UserService(UserRepository userRepository, PasswordEncoder encoder) {
         this.userRepository = userRepository;
-        this.passwordHasher = passwordHasher;
+        this.encoder = encoder;
     }
 
     public List<User> getUsers() {
@@ -43,18 +43,16 @@ public class UserService {
 
 
     public void registerNewUser(User user) {
-        User optionalUsername = userRepository.findByUsername(user.getUsername());
-        User optionalEmail = userRepository.findByEmail(user.getEmail());
-        if (optionalUsername != null) {
-            throw new IllegalArgumentException("Username already registered");
-        } else if (optionalEmail != null) {
-            throw new IllegalArgumentException("Email already registered");
+        Optional<User> optionalUsername = userRepository.findByUsername(user.getUsername());
+        Optional<User> optionalEmail = userRepository.findByEmail(user.getEmail());
+        if (optionalUsername.isPresent() && optionalEmail.isPresent()) {
+            user.setId(UUID.randomUUID().toString());
+            user.setPassword(encoder.encode(user.getPassword()));
+            user.setRole("USER");
+            userRepository.save(user);
+        } else {
+            throw new IllegalArgumentException("Username or Email already registered");
         }
-        user.setId(UUID.randomUUID().toString());
-        user.setPassword(passwordHasher.encode(user.getPassword()));
-        user.setRole("USER");
-        userRepository.save(user);
-
     }
 
     public void updateUserDetails(User user) {

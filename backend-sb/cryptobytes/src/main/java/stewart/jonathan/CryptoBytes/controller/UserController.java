@@ -21,16 +21,16 @@ public class UserController {
     public List<User> getUsers() {
         return userService.getUsers();
     }
-
-    @GetMapping("/findByUsername")
-    public User findByUsername(@RequestBody User user){
-        return userService.findByUsername(user.getUsername());
-    }
-
-    @GetMapping("/emailSearch")
-    public User getUserByEmail(@RequestBody User user) {
-        return userService.findByEmail(user.getEmail());
-    }
+//
+//    @GetMapping("/findByUsername")
+//    public User findByUsername(@RequestBody User user){
+//        return userService.findByUsername(user.getUsername());
+//    }
+//
+//    @GetMapping("/emailSearch")
+//    public User getUserByEmail(@RequestBody User user) {
+//        return userService.findByEmail(user.getEmail());
+//    }
 
     @PostMapping("/register")
     public void registerNewUser(@RequestBody User user) {
