@@ -1,0 +1,1 @@
+{"timestamp":"2022-11-23T11:48:38.155+00:00","status":404,"error":"Not Found","message":"Coin not found in your portfolio","path":"/portfolio/RRR"}

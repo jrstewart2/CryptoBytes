@@ -3,10 +3,11 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-./src/main/java/resources/application.yml
+./src/main/resources/application.yml
 ./application.yml
-./src/main/java/resources/**
-!**/src/main/java/resources/application.yml
+./src/main/resources/**
+!**/src/main/resources/application.yml
+/cryptobytes/src/main/resources/application.yml
 
 ### STS ###
 .apt_generated

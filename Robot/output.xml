@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 6.0.1 (Python 3.11.0 on win32)" generated="20221123 13:28:10.035" rpa="false" schemaversion="3">
+<suite id="s1" name="Robot" source="C:\Users\P502375\OneDrive - Nationwide Building Society\Desktop\Learning\CryptoBytes\backend-sb\Robot">
+<suite id="s1-s1" name="APITesting" source="C:\Users\P502375\OneDrive - Nationwide Building Society\Desktop\Learning\CryptoBytes\backend-sb\Robot\APITesting.robot">
+<test id="s1-s1-t1" name="CONFIRMATION OF DELETE REQUEST" line="78">
+<kw name="Create Session" library="RequestsLibrary">
+<arg>session</arg>
+<arg>${HOST}</arg>
+<arg>verify=false</arg>
+<doc>Create Session: create a HTTP session to a server</doc>
+<msg timestamp="20221123 13:28:10.752" level="INFO">Creating Session using : alias=session, url=http://localhost:8080, headers={},                     cookies={}, auth=None, timeout=None, proxies=None, verify=False,                     debug=0 </msg>
+<status status="PASS" starttime="20221123 13:28:10.752" endtime="20221123 13:28:10.752"/>
+</kw>
+<kw name="GET" library="RequestsLibrary">
+<arg>session</arg>
+<arg>/portfolio/ETH</arg>
+<doc>Sends a GET request.</doc>
+<msg timestamp="20221123 13:28:10.757" level="FAIL">MissingSchema: Invalid URL 'session': No scheme supplied. Perhaps you meant http://session?</msg>
+<status status="FAIL" starttime="20221123 13:28:10.752" endtime="20221123 13:28:10.804"/>
+</kw>
+<kw name="Run Keyword And Continue On Failure" library="BuiltIn">
+<arg>Integer</arg>
+<arg>response status</arg>
+<arg>404</arg>
+<doc>Runs the keyword and continues execution even if a failure occurs.</doc>
+<status status="NOT RUN" starttime="20221123 13:28:10.806" endtime="20221123 13:28:10.806"/>
+</kw>
+<doc>This test will verify that the previous Delete request has removed
+the entity from the database. The response code should be 404.</doc>
+<tag>Smoke</tag>
+<status status="FAIL" starttime="20221123 13:28:10.751" endtime="20221123 13:28:10.808">MissingSchema: Invalid URL 'session': No scheme supplied. Perhaps you meant http://session?</status>
+</test>
+<doc>Suite Description This suite will contain tests for the portfolio API</doc>
+<status status="FAIL" starttime="20221123 13:28:10.064" endtime="20221123 13:28:10.811"/>
+</suite>
+<status status="FAIL" starttime="20221123 13:28:10.037" endtime="20221123 13:28:10.814"/>
+</suite>
+<statistics>
+<total>
+<stat pass="0" fail="1" skip="0">All Tests</stat>
+</total>
+<tag>
+<stat pass="0" fail="1" skip="0">Smoke</stat>
+</tag>
+<suite>
+<stat pass="0" fail="1" skip="0" id="s1" name="Robot">Robot</stat>
+<stat pass="0" fail="1" skip="0" id="s1-s1" name="APITesting">Robot.APITesting</stat>
+</suite>
+</statistics>
+<errors>
+<msg timestamp="20221123 13:28:10.750" level="ERROR">Error in file 'C:\Users\P502375\OneDrive - Nationwide Building Society\Desktop\Learning\CryptoBytes\backend-sb\Robot\APITesting.robot' on line 7: Resource file '..\keywords\my_keywords.robot' does not exist.</msg>
+</errors>
+</robot>
