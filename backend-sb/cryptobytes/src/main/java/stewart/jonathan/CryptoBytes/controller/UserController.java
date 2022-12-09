@@ -5,7 +5,6 @@ import stewart.jonathan.CryptoBytes.model.User;
 import stewart.jonathan.CryptoBytes.service.UserService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
@@ -23,14 +22,14 @@ public class UserController {
         return userService.getUsers();
     }
 
-    @GetMapping("/usernameSearch")
-    public Optional<User> getUserByUsername(@RequestBody User user) {
-        return userService.getUserByUsername(user.getUsername());
+    @GetMapping("/findByUsername")
+    public User findByUsername(@RequestBody User user){
+        return userService.findByUsername(user.getUsername());
     }
 
     @GetMapping("/emailSearch")
-    public Optional<User> getUserByEmail(@RequestBody User user) {
-        return userService.getUserByEmail(user.getEmail());
+    public User getUserByEmail(@RequestBody User user) {
+        return userService.findByEmail(user.getEmail());
     }
 
     @PostMapping("/register")

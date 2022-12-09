@@ -2,7 +2,7 @@ package stewart.jonathan.CryptoBytes.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import stewart.jonathan.CryptoBytes.Utilities.PasswordHasher;
+import stewart.jonathan.CryptoBytes.utilities.PasswordHasher;
 import stewart.jonathan.CryptoBytes.model.User;
 import stewart.jonathan.CryptoBytes.repository.UserRepository;
 
@@ -27,30 +27,27 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public Optional<User> getUserByUsername(String username) {
-        Optional<User> optionalUser = userRepository.findUserByUsername(username);
-        if (optionalUser.isPresent()) {
-            return userRepository.findUserByUsername(username);
-        } else {
-            throw new IllegalArgumentException("Username " + username + " not found.");
-        }
+    public User findByUsername(String username) {
+        return getUsers().stream()
+                .filter(user -> username.equals(user.getUsername()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Username " + username + " is not registered"));
     }
 
-    public Optional<User> getUserByEmail(String email) {
-        Optional<User> optionalUser = userRepository.findUserByEmail(email);
-        if (optionalUser.isPresent()) {
-            return userRepository.findUserByUsername(email);
-        } else {
-            throw new IllegalArgumentException("Email " + email + " not found.");
-        }
+    public User findByEmail(String email) {
+        return getUsers().stream()
+                .filter(user -> email.equals(user.getEmail()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Email " + email + " is not registered"));
     }
+
 
     public void registerNewUser(User user) {
-        Optional<User> optionalUsername = userRepository.findUserByUsername(user.getUsername());
-        Optional<User> optionalEmail = userRepository.findUserByEmail(user.getEmail());
-        if (optionalUsername.isPresent()) {
+        User optionalUsername = userRepository.findByUsername(user.getUsername());
+        User optionalEmail = userRepository.findByEmail(user.getEmail());
+        if (optionalUsername != null) {
             throw new IllegalArgumentException("Username already registered");
-        } else if (optionalEmail.isPresent()) {
+        } else if (optionalEmail != null) {
             throw new IllegalArgumentException("Email already registered");
         }
         user.setId(UUID.randomUUID().toString());

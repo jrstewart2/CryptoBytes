@@ -8,6 +8,9 @@ target/
 ./src/main/resources/**
 !**/src/main/resources/application.yml
 /cryptobytes/src/main/resources/application.yml
+/cryptobytes/src/main/resources/certs/**
+/cryptobytes/src/main/resources/certs/private.pem
+/cryptobytes/src/main/resources/certs/public.pem
 
 ### STS ###
 .apt_generated

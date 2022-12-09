@@ -23,21 +23,21 @@ public class DatabaseConfig {
     CommandLineRunner commandLineRunner(UserRepository userRepository,
                                         PortfolioRepository portfolioRepository) {
         return args -> {
-            User user = new User(
-                    "1",
-                    "user",
-                    "user@email.com",
-                    "password",
-                    "USER"
-            );
-            User admin = new User(
-                    "2",
-                    "admin",
-                    "admin@email.com",
-                    "password",
-                    "ADMIN"
-            );
-            userRepository.saveAll(List.of(user, admin));
+//            User user = new User(
+//                    "1",
+//                    "user",
+//                    "user@email.com",
+//                    "password",
+//                    "USER"
+//            );
+//            User admin = new User(
+//                    "2",
+//                    "admin",
+//                    "admin@email.com",
+//                    "password",
+//                    "ADMIN"
+//            );
+//            userRepository.saveAll(List.of(user, admin));
 
             Portfolio btc = new Portfolio(
                     "BTC",
