@@ -18,7 +18,7 @@ GET Request - validate response code and response body
     ...     and the response body contains the key 'amount'.
     [Tags]    Smoke
     Create Session  session         ${HOST}       verify=false
-    ${response}=    GET On Session  session     /portfolio      params=query=
+    ${response}=    GET On Session  session     /api/portfolio      params=query=
     Status Should Be    200     ${response}
 
     ${name}=            Get Value From Json     ${response.json()}[0]   name
@@ -35,7 +35,7 @@ GET Request by ID - validate response code and body when requesting portfolio by
     ...     when a query parameter is used in the URL.
     [Tags]    Smoke
     Create Session  session         ${HOST}       verify=false
-    ${response}=    GET On Session  session     /portfolio/ETH      params=query=
+    ${response}=    GET On Session  session     /api//portfolio/ETH      params=query=
     Status Should Be    200     ${response}
 
     ${name}=            Get Value From Json     ${response.json()}      name
@@ -55,7 +55,7 @@ POST Request
     Create Session  session         ${HOST}   verify=false
     &{body}=    Create Dictionary   id=LTC  name=Litecoin   amount=123
 
-    ${response}=    POST On Session     session     /portfolio  json=${body}
+    ${response}=    POST On Session     session     /api/portfolio  json=${body}
     Status Should Be    201         ${response}
 
     ${id}=          Get Value From Json     ${response.json()}      id
@@ -72,7 +72,7 @@ DELETE Request
     ...     The response code should return 202.
     [Tags]  Regression
     Create Session      session         ${HOST}     verify=false
-    ${response}=    DELETE On Session   session     /portfolio/ETH
+    ${response}=    DELETE On Session   session     /api/portfolio/ETH
     Status Should Be    202             ${response}
 
 CONFIRMATION OF DELETE REQUEST
@@ -93,7 +93,7 @@ PATCH Request
     Create Session  session         ${HOST}   verify=false
     &{body}=    Create Dictionary   amount=2.0
 
-    ${response}=    PATCH On Session     session     /portfolio/BTC  json=${body}
+    ${response}=    PATCH On Session     session     /api/portfolio/BTC  json=${body}
     Log To Console    ${response}
     Status Should Be    200         ${response}
 
@@ -102,7 +102,7 @@ CONFIRMATION OF PATCH REQUEST
     ...     the entity from the database. The response code should be 404.
     [Tags]    Smoke
     Create Session  session         ${HOST}       verify=false
-    ${response}=    GET On Session  session     /portfolio      params=query=
+    ${response}=    GET On Session  session     /api/portfolio      params=query=
     Status Should Be    200     ${response}
 
     ${name}=            Get Value From Json     ${response.json()}[0]   name

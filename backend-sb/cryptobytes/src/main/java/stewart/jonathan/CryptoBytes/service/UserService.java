@@ -1,8 +1,8 @@
 package stewart.jonathan.CryptoBytes.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import stewart.jonathan.CryptoBytes.Utilities.PasswordHasher;
 import stewart.jonathan.CryptoBytes.model.User;
 import stewart.jonathan.CryptoBytes.repository.UserRepository;
 
@@ -15,56 +15,76 @@ import java.util.UUID;
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordHasher passwordHasher;
+    private final PasswordEncoder encoder;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordHasher passwordHasher) {
+    public UserService(UserRepository userRepository, PasswordEncoder encoder) {
         this.userRepository = userRepository;
-        this.passwordHasher = passwordHasher;
+        this.encoder = encoder;
     }
 
     public List<User> getUsers() {
         return userRepository.findAll();
     }
 
-    public Optional<User> getUserByUsername(String username) {
-        Optional<User> optionalUser = userRepository.findUserByUsername(username);
-        if (optionalUser.isPresent()) {
-            return userRepository.findUserByUsername(username);
-        } else {
-            throw new IllegalArgumentException("Username " + username + " not found.");
-        }
+    public User findByUsername(String username) {
+        return getUsers().stream()
+                .filter(user -> username.equals(user.getUsername()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Username " + username + " is not registered"));
     }
 
-    public Optional<User> getUserByEmail(String email) {
-        Optional<User> optionalUser = userRepository.findUserByEmail(email);
-        if (optionalUser.isPresent()) {
-            return userRepository.findUserByUsername(email);
-        } else {
-            throw new IllegalArgumentException("Email " + email + " not found.");
-        }
+    public User findByEmail(String email) {
+        return getUsers().stream()
+                .filter(user -> email.equals(user.getEmail()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Email " + email + " is not registered"));
     }
+
 
     public void registerNewUser(User user) {
-        Optional<User> optionalUsername = userRepository.findUserByUsername(user.getUsername());
-        Optional<User> optionalEmail = userRepository.findUserByEmail(user.getEmail());
-        if (optionalUsername.isPresent()) {
-            throw new IllegalArgumentException("Username already registered");
-        } else if (optionalEmail.isPresent()) {
-            throw new IllegalArgumentException("Email already registered");
+        Optional<User> optionalUsername = userRepository.findByUsername(user.getUsername());
+        Optional<User> optionalEmail = userRepository.findByEmail(user.getEmail());
+        if (optionalUsername.isPresent() || optionalEmail.isPresent()) {
+            throw new IllegalArgumentException("Username or Email already registered");
+        } else {
+            user.setId(UUID.randomUUID().toString());
+            user.setPassword(encoder.encode(user.getPassword()));
+            user.setRole("USER");
+            userRepository.save(user);
         }
-        user.setId(UUID.randomUUID().toString());
-        user.setPassword(passwordHasher.encode(user.getPassword()));
-        user.setRole("USER");
-        userRepository.save(user);
-
     }
 
-    public void updateUserDetails(User user) {
-        //authenticate first
+    public User findById(String id) {
+        return getUsers().stream()
+                .filter(user -> id.equals(user.getId()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("User with ID: " + id + " not found"));
     }
 
-    public void deleteUser(String id) {
+    public User updateRole(String id) {
+        User userToBeAdmin = findById(id);
+        userToBeAdmin.setRole("ADMIN");
+        return userToBeAdmin;
+    }
 
+    public User updateEmail(User user) {
+        User currentDetails = findByUsername(user.getUsername());
+        currentDetails.setEmail(user.getEmail());
+        return currentDetails;
+    }
+
+    public String deleteUser(User user) {
+        if (user.getId() != null) {
+            User userToBeDeleted = findById(user.getId());
+            userRepository.delete(userToBeDeleted);
+        } else if (user.getUsername() != null) {
+            User userToBeDeleted = findByUsername(user.getUsername());
+            userRepository.delete(userToBeDeleted);
+        } else {
+            User userToBeDeleted = findByEmail(user.getEmail());
+            userRepository.delete(userToBeDeleted);
+        }
+        return "User " + user + " was deleted";
     }
 }
