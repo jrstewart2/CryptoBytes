@@ -43,7 +43,6 @@ public class SecurityConfig {
         this.customUserDetailService = customUserDetailService;
     }
 
-
 //    @Autowired
 //    public SecurityConfig(UserDetailsService userDetailsService, UserAuthentication userAuthentication, PasswordHasher passwordHasher) {
 //        this.userDetailsService = userDetailsService;
@@ -79,7 +78,9 @@ public class SecurityConfig {
                         //.antMatchers("/api/portfolio").permitAll()
                                 //.antMatchers("/api/**").permitAll()
                         //.antMatchers("/api/portfolio").hasAnyRole("USER", "ADMIN")
-                        //.antMatchers("/api/users").hasAnyRole("ADMIN")
+                        //.antMatchers("/api/users").hasAnyRole("ADMIN")#
+                        .antMatchers("/api/auth/**").permitAll()
+                        .antMatchers("/home/**").permitAll()
                         .antMatchers("/api/users/**").permitAll()
                         .anyRequest().authenticated()
                 )
@@ -89,7 +90,7 @@ public class SecurityConfig {
                 .and()
                 .httpBasic(Customizer.withDefaults())
                 //.logout().and()
-                //.oauth2Login().and()
+                .oauth2Login().and()
                 .headers(headers -> headers.frameOptions().sameOrigin())
                 .build();
     }

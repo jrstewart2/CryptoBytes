@@ -45,21 +45,46 @@ public class UserService {
     public void registerNewUser(User user) {
         Optional<User> optionalUsername = userRepository.findByUsername(user.getUsername());
         Optional<User> optionalEmail = userRepository.findByEmail(user.getEmail());
-        if (optionalUsername.isPresent() && optionalEmail.isPresent()) {
+        if (optionalUsername.isPresent() || optionalEmail.isPresent()) {
+            throw new IllegalArgumentException("Username or Email already registered");
+        } else {
             user.setId(UUID.randomUUID().toString());
             user.setPassword(encoder.encode(user.getPassword()));
             user.setRole("USER");
             userRepository.save(user);
-        } else {
-            throw new IllegalArgumentException("Username or Email already registered");
         }
     }
 
-    public void updateUserDetails(User user) {
-        //authenticate first
+    public User findById(String id) {
+        return getUsers().stream()
+                .filter(user -> id.equals(user.getId()))
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("User with ID: " + id + " not found"));
     }
 
-    public void deleteUser(String id) {
+    public User updateRole(String id) {
+        User userToBeAdmin = findById(id);
+        userToBeAdmin.setRole("ADMIN");
+        return userToBeAdmin;
+    }
 
+    public User updateEmail(User user) {
+        User currentDetails = findByUsername(user.getUsername());
+        currentDetails.setEmail(user.getEmail());
+        return currentDetails;
+    }
+
+    public String deleteUser(User user) {
+        if (user.getId() != null) {
+            User userToBeDeleted = findById(user.getId());
+            userRepository.delete(userToBeDeleted);
+        } else if (user.getUsername() != null) {
+            User userToBeDeleted = findByUsername(user.getUsername());
+            userRepository.delete(userToBeDeleted);
+        } else {
+            User userToBeDeleted = findByEmail(user.getEmail());
+            userRepository.delete(userToBeDeleted);
+        }
+        return "User " + user + " was deleted";
     }
 }
