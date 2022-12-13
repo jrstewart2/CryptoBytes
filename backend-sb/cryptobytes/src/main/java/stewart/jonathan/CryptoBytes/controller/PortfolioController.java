@@ -28,7 +28,7 @@ public class PortfolioController {
     }
 
     @GetMapping("/{id}")
-    public Portfolio getPortfolioById(@PathVariable String id) {
+    public Portfolio getPortfolioById(@PathVariable long id) {
         return portfolioService.getPortfolioById(id);
     }
 
@@ -40,14 +40,14 @@ public class PortfolioController {
 
     @ResponseStatus(HttpStatus.OK)
     @PatchMapping("/{id}")
-    public void updateCoin(@PathVariable String id,
+    public void updateCoin(@PathVariable Long id,
                            @RequestBody Portfolio portfolio) {
         portfolioService.updateCoin(id, portfolio);
     }
 
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/{id}")
-    public void removeCoinFromPortfolio(@PathVariable String id){
+    public void removeCoinFromPortfolio(@PathVariable Long id){
         portfolioService.removeCoin(id);
     }
 

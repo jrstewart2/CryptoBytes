@@ -79,6 +79,7 @@ public class SecurityConfig {
                                 //.antMatchers("/api/**").permitAll()
                         //.antMatchers("/api/portfolio").hasAnyRole("USER", "ADMIN")
                         //.antMatchers("/api/users").hasAnyRole("ADMIN")#
+                        .antMatchers("/test/**").permitAll()
                         .antMatchers("/api/auth/**").permitAll()
                         .antMatchers("/home/**").permitAll()
                         .antMatchers("/api/users/**").permitAll()

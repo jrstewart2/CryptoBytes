@@ -1,17 +1,22 @@
 package stewart.jonathan.CryptoBytes.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Set;
 import java.util.UUID;
 
 
 @Entity
-@Table
-public class User {
+@Table(name = "users")
+public class User{
 
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
     @NonNull
     private String username;
     @NonNull
@@ -20,21 +25,24 @@ public class User {
     private String password;
     private String role;
 
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+//    @JsonIgnore
+    private Set<Portfolio> portfolio;
+
     public User() {}
 
-    public User(String id, String username, String email, String password, String role) {
-        this.id = id;
+    public User(String username, String email, String password, String role) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.role = role;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
@@ -68,6 +76,14 @@ public class User {
 
     public String getRole() {
         return this.role;
+    }
+
+    public Set<Portfolio> getPortfolio() {
+        return portfolio;
+    }
+
+    public void setPortfolio(Set<Portfolio> portfolio) {
+        this.portfolio = portfolio;
     }
 
     @Override

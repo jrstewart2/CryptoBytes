@@ -48,21 +48,21 @@ public class UserService {
         if (optionalUsername.isPresent() || optionalEmail.isPresent()) {
             throw new IllegalArgumentException("Username or Email already registered");
         } else {
-            user.setId(UUID.randomUUID().toString());
+//            user.setId(UUID.randomUUID().toString());
             user.setPassword(encoder.encode(user.getPassword()));
             user.setRole("USER");
             userRepository.save(user);
         }
     }
 
-    public User findById(String id) {
+    public User findById(long id) {
         return getUsers().stream()
-                .filter(user -> id.equals(user.getId()))
+                .filter(user -> id == user.getId())
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("User with ID: " + id + " not found"));
     }
 
-    public User updateRole(String id) {
+    public User updateRole(long id) {
         User userToBeAdmin = findById(id);
         userToBeAdmin.setRole("ADMIN");
         return userToBeAdmin;
@@ -75,7 +75,7 @@ public class UserService {
     }
 
     public String deleteUser(User user) {
-        if (user.getId() != null) {
+        if (user.getId() > 0) {
             User userToBeDeleted = findById(user.getId());
             userRepository.delete(userToBeDeleted);
         } else if (user.getUsername() != null) {

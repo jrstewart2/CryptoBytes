@@ -1,32 +1,60 @@
 package stewart.jonathan.CryptoBytes.model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 
 @Entity
-@Table
-public class Portfolio {
+@Table(name = "portfolios")
+public class Portfolio{
+
     @Id
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
+    private String symbol;
     private String name;
     private Double amount;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "user_id", nullable = false)
+    //@JsonIgnore
+    private User user;
+
     public Portfolio() {}
 
-    public Portfolio(String id, String name, Double amount) {
-        this.id = id;
+    public Portfolio(String symbol, String name, Double amount) {
+        this.symbol = symbol;
         this.name = name;
         this.amount = amount;
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public void setSymbol(String id) {
+        this.symbol = id;
     }
 
     public String getName() {
@@ -50,18 +78,18 @@ public class Portfolio {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Portfolio portfolio = (Portfolio) o;
-        return id.equals(portfolio.id) && name.equals(portfolio.name) && amount.equals(portfolio.amount);
+        return symbol.equals(portfolio.symbol) && name.equals(portfolio.name) && amount.equals(portfolio.amount);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, amount);
+        return Objects.hash(symbol, name, amount);
     }
 
     @Override
     public String toString() {
         return "Portfolio{" +
-                "id='" + id + '\'' +
+                "id='" + symbol + '\'' +
                 ", name='" + name + '\'' +
                 ", amount=" + amount +
                 '}';

@@ -23,8 +23,8 @@ public class PortfolioService{
         return portfolioRepository.findAll();
     }
 
-    public Portfolio getPortfolioById(String id) {
-        return getPortfolio().stream().filter(stream -> stream.getId().equals(id))
+    public Portfolio getPortfolioById(long id) {
+        return getPortfolio().stream().filter(stream -> stream.getSymbol().equals(id))
                 .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("Coin not found in your portfolio"));
     }
@@ -34,11 +34,11 @@ public class PortfolioService{
     }
 
     @Transactional
-    public void updateCoin(String id, Portfolio portfolio){
+    public void updateCoin(long id, Portfolio portfolio){
         Portfolio coin = portfolioRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Coin " + id + "not found in your portfolio"));
-        if (portfolio.getId() != null){
-            coin.setId(portfolio.getId());
+        if (portfolio.getSymbol() != null){
+            coin.setSymbol(portfolio.getSymbol());
         }
         if (portfolio.getName() != null){
             coin.setName(portfolio.getName());
@@ -48,7 +48,7 @@ public class PortfolioService{
         }
     }
 
-    public void removeCoin(String id){
+    public void removeCoin(long id){
         if (portfolioRepository.existsById(id)){
             portfolioRepository.deleteById(id);
         } else {

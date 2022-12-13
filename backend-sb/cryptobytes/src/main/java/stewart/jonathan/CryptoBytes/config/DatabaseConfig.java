@@ -27,14 +27,12 @@ public class DatabaseConfig {
                                         PasswordEncoder encoder) {
         return args -> {
             User user = new User(
-                    "1",
                     "user",
                     "user@email.com",
                     encoder.encode("password"),
                     "USER"
             );
             User admin = new User(
-                    "2",
                     "admin",
                     "admin@email.com",
                     encoder.encode("password"),
@@ -42,6 +40,7 @@ public class DatabaseConfig {
             );
             userRepository.saveAll(List.of(user, admin));
 
+            // ADD CRYPTO FOR USER
             Portfolio btc = new Portfolio(
                     "BTC",
                     "Bitcoin",
@@ -52,8 +51,29 @@ public class DatabaseConfig {
                     "Ethereum",
                     0.45
             );
+            btc.setUser(user);
+            eth.setUser(user);
             portfolioRepository.saveAll(List.of(btc, eth));
 
+            //ADD CRYPTO FOR ADMIN
+            Portfolio adminBtc = new Portfolio(
+                    "BTC",
+                    "Bitcoin",
+                    17.23
+            );
+            Portfolio adminLrc = new Portfolio(
+                    "LRC",
+                    "Loopring",
+                    567.2
+            );
+            Portfolio adminImx = new Portfolio(
+                    "IMX",
+                    "Immutable X",
+                    34.12
+            );
+            adminBtc.setUser(admin);
+            adminLrc.setUser(admin);
+            adminImx.setUser(admin);
         };
     }
 }

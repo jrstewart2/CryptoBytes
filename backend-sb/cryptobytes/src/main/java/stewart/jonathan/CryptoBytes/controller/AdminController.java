@@ -33,7 +33,7 @@ public class AdminController {
     }
 
     @PatchMapping("/makeAdmin")
-    public User updateRole(@RequestBody String id) {
+    public User updateRole(@RequestBody Long id) {
         return userService.updateRole(id);
     }
 
