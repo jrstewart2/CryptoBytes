@@ -1,55 +1,47 @@
 package stewart.jonathan.CryptoBytes.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import stewart.jonathan.CryptoBytes.model.Portfolio;
-import stewart.jonathan.CryptoBytes.service.PortfolioService;
+import stewart.jonathan.CryptoBytes.model.Crypto;
+import stewart.jonathan.CryptoBytes.model.User;
+import stewart.jonathan.CryptoBytes.service.UserService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/portfolio")
-@CrossOrigin(origins = "http://localhost:3000")
 public class PortfolioController {
 
-    private final PortfolioService portfolioService;
+    private final UserService userService;
 
     @Autowired
-    public PortfolioController(PortfolioService portfolioService) {
-        this.portfolioService = portfolioService;
-    }
-
-    @GetMapping
-    public List<Portfolio> getPortfolio() {
-        return portfolioService.getPortfolio();
+    public PortfolioController(UserService userService) {
+        this.userService = userService;
     }
 
     @GetMapping("/{id}")
-    public Portfolio getPortfolioById(@PathVariable String id) {
-        return portfolioService.getPortfolioById(id);
+
+    public List<Crypto> getPortfolioForUser(@PathVariable Long id){
+        return userService.getPortfolioForUser(id);
     }
 
-    @ResponseStatus(HttpStatus.OK)
-    @PostMapping
-    public void addCoinToPortfolio(@RequestBody Portfolio portfolio) {
-        portfolioService.addCoin(portfolio);
+    @PostMapping("/{id}")
+    public void addNewCrypto(@PathVariable Long id,
+                             @RequestBody Crypto crypto) {
+        userService.addCryptoToPortfolio(id, crypto);
     }
 
-    @ResponseStatus(HttpStatus.OK)
-    @PatchMapping("/{id}")
-    public void updateCoin(@PathVariable String id,
-                           @RequestBody Portfolio portfolio) {
-        portfolioService.updateCoin(id, portfolio);
+    @PatchMapping("/{id}/{cryptoSymbol}")
+    public Crypto updateCoin(@PathVariable long id,
+                             @PathVariable String cryptoSymbol,
+                             @RequestBody Crypto crypto) {
+        return userService.updateCoinInPortfolio(id, cryptoSymbol, crypto);
     }
 
-    @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping("/{id}")
-    public void removeCoinFromPortfolio(@PathVariable String id){
-        portfolioService.removeCoin(id);
+    @DeleteMapping("/{id}/{cryptoSymbol}")
+    public void deleteCoin(@PathVariable long id,
+                           @PathVariable String cryptoSymbol){
+        userService.deleteCoinFromPortfolio(id, cryptoSymbol);
     }
-
-
 }

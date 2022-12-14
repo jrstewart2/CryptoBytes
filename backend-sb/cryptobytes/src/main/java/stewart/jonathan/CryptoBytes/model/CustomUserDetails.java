@@ -3,7 +3,7 @@ package stewart.jonathan.CryptoBytes.model;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import stewart.jonathan.CryptoBytes.model.User;
+
 
 import java.util.Arrays;
 import java.util.Collection;

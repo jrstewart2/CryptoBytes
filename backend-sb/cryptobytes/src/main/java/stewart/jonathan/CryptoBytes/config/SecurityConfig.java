@@ -33,9 +33,6 @@ public class SecurityConfig {
 
     private final RsaKeyProperties rsaKeys;
     private final CustomUserDetailService customUserDetailService;
-    //    private final UserDetailsService userDetailsService;
-//    private final UserAuthentication userAuthentication;
-
 
     @Autowired
     public SecurityConfig(RsaKeyProperties rsaKeys, CustomUserDetailService customUserDetailService) {
@@ -43,12 +40,6 @@ public class SecurityConfig {
         this.customUserDetailService = customUserDetailService;
     }
 
-//    @Autowired
-//    public SecurityConfig(UserDetailsService userDetailsService, UserAuthentication userAuthentication, PasswordHasher passwordHasher) {
-//        this.userDetailsService = userDetailsService;
-//        this.userAuthentication = userAuthentication;
-//        this.passwordHasher = passwordHasher;
-//    }
 
     @Bean
     JwtDecoder jwtDecoder() {
@@ -74,14 +65,11 @@ public class SecurityConfig {
                 .cors().and()
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        //.antMatchers("/resources/static/**", "/index", "/", "/home", "/token").permitAll()
-                        //.antMatchers("/api/portfolio").permitAll()
-                                //.antMatchers("/api/**").permitAll()
-                        //.antMatchers("/api/portfolio").hasAnyRole("USER", "ADMIN")
-                        //.antMatchers("/api/users").hasAnyRole("ADMIN")#
+                        .antMatchers("/resources/static/**","/index", "/", "/home/**").permitAll()
                         .antMatchers("/api/auth/**").permitAll()
-                        .antMatchers("/home/**").permitAll()
-                        .antMatchers("/api/users/**").permitAll()
+                        .antMatchers("/api/portfolio").hasAnyRole("USER", "ADMIN")
+                        .antMatchers("/api/admin").hasAnyRole("ADMIN")
+                        .antMatchers("/test/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(customUserDetailService)
@@ -89,7 +77,7 @@ public class SecurityConfig {
                 .formLogin()
                 .and()
                 .httpBasic(Customizer.withDefaults())
-                //.logout().and()
+                .logout().and()
                 .oauth2Login().and()
                 .headers(headers -> headers.frameOptions().sameOrigin())
                 .build();
@@ -100,28 +88,5 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
-    //   @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PATCH", "HEAD", "OPTIONS"));
-//        configuration.setMaxAge(10L);
-//        configuration.setAllowedHeaders(Arrays.asList("Authorization"));
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
-
-//    @Bean
-//    public InMemoryUserDetailsManager user() {
-//        return new InMemoryUserDetailsManager(
-//                User.withUsername("admin")
-//                        .password("{noop}password")
-//                        .authorities("read")
-//                        .roles("ADMIN")
-//                        .build()
-//        );
-//    }
 
 }
