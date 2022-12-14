@@ -1,90 +1,81 @@
 package stewart.jonathan.CryptoBytes.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import stewart.jonathan.CryptoBytes.model.Crypto;
 import stewart.jonathan.CryptoBytes.model.User;
+import stewart.jonathan.CryptoBytes.repository.CryptoRepository;
 import stewart.jonathan.CryptoBytes.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder encoder;
+    private final CryptoRepository cryptoRepository;
 
     @Autowired
-    public UserService(UserRepository userRepository, PasswordEncoder encoder) {
+    public UserService(UserRepository userRepository, CryptoRepository cryptoRepository) {
         this.userRepository = userRepository;
-        this.encoder = encoder;
+        this.cryptoRepository = cryptoRepository;
     }
 
-    public List<User> getUsers() {
+    public List<User> getUsers(){
         return userRepository.findAll();
     }
 
-    public User findByUsername(String username) {
+    public User getProfile(Long id){
         return getUsers().stream()
-                .filter(user -> username.equals(user.getUsername()))
+                .filter(u -> id.equals(u.getId()))
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Username " + username + " is not registered"));
+                .orElseThrow(() -> new IllegalArgumentException("User with ID " + id + " not found"));
     }
 
-    public User findByEmail(String email) {
-        return getUsers().stream()
-                .filter(user -> email.equals(user.getEmail()))
+    public List<Crypto> getPortfolioForUser(Long id){
+        return getProfile(id).getCryptos();
+    }
+
+    public Crypto getCryptoFromPortfolio(String symbol, List<Crypto> portfolio){
+        return portfolio.stream()
+                .filter(c -> symbol.equals(c.getSymbol()))
                 .findFirst()
-                .orElseThrow(() -> new IllegalStateException("Email " + email + " is not registered"));
+                .orElseThrow(() ->
+                        new IllegalArgumentException("Crypto with symbol " + symbol + " not found in your portfolio"));
+
     }
 
-
-    public void registerNewUser(User user) {
-        Optional<User> optionalUsername = userRepository.findByUsername(user.getUsername());
-        Optional<User> optionalEmail = userRepository.findByEmail(user.getEmail());
-        if (optionalUsername.isPresent() || optionalEmail.isPresent()) {
-            throw new IllegalArgumentException("Username or Email already registered");
-        } else {
-            user.setId(UUID.randomUUID().toString());
-            user.setPassword(encoder.encode(user.getPassword()));
-            user.setRole("USER");
-            userRepository.save(user);
-        }
+    @Transactional
+    public void addCryptoToPortfolio(Long id, Crypto crypto) {
+        User user = getProfile(id);
+        List<Crypto> userPortfolio = user.getCryptos();
+        crypto.setUser(user);
+        userPortfolio.add(crypto);
+        user.setCryptos(userPortfolio);
+        userRepository.save(user);
     }
 
-    public User findById(String id) {
-        return getUsers().stream()
-                .filter(user -> id.equals(user.getId()))
-                .findFirst()
-                .orElseThrow(() -> new IllegalStateException("User with ID: " + id + " not found"));
+    public Crypto updateCoinInPortfolio(long id, String cryptoSymbol, Crypto crypto) {
+        User user = getProfile(id);
+        Crypto coin = getCryptoFromPortfolio(cryptoSymbol, user.getCryptos());
+        coin.setCoins(crypto.getCoins());
+        userRepository.save(user);
+        return coin;
     }
 
-    public User updateRole(String id) {
-        User userToBeAdmin = findById(id);
-        userToBeAdmin.setRole("ADMIN");
-        return userToBeAdmin;
+    public void deleteCoinFromPortfolio(long id, String cryptoSymbol) {
+        User user = getProfile(id);
+        List<Crypto> portfolio = user.getCryptos();
+
+        Crypto coin = getCryptoFromPortfolio(cryptoSymbol, portfolio);
+        portfolio.remove(coin);
+        coin.setUser(null);
+        user.setCryptos(portfolio);
+        userRepository.save(user);
     }
 
-    public User updateEmail(User user) {
-        User currentDetails = findByUsername(user.getUsername());
-        currentDetails.setEmail(user.getEmail());
-        return currentDetails;
-    }
-
-    public String deleteUser(User user) {
-        if (user.getId() != null) {
-            User userToBeDeleted = findById(user.getId());
-            userRepository.delete(userToBeDeleted);
-        } else if (user.getUsername() != null) {
-            User userToBeDeleted = findByUsername(user.getUsername());
-            userRepository.delete(userToBeDeleted);
-        } else {
-            User userToBeDeleted = findByEmail(user.getEmail());
-            userRepository.delete(userToBeDeleted);
-        }
-        return "User " + user + " was deleted";
+    public void registerNewUser(User user){
+        userRepository.save(user);
     }
 }
