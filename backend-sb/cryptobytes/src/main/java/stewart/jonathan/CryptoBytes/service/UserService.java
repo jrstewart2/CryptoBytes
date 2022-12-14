@@ -63,4 +63,16 @@ public class UserService {
         userRepository.save(user);
         return coin;
     }
+
+    public void deleteCoinFromPortfolio(long id, String cryptoSymbol) {
+        User user = getProfile(id);
+        List<Crypto> portfolio = user.getCryptos();
+
+        Crypto coin = getCryptoFromPortfolio(cryptoSymbol, portfolio);
+        portfolio.remove(coin);
+        coin.setUser(null);
+        user.setCryptos(portfolio);
+        userRepository.save(user);
+
+    }
 }

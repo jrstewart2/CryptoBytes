@@ -45,4 +45,10 @@ public class UserController {
                              @RequestBody Crypto crypto) {
         return userService.updateCoinInPortfolio(id, cryptoSymbol, crypto);
     }
+
+    @DeleteMapping("/portfolio/{id}/{crytoSymbol}")
+    public void deleteCoin(@PathVariable long id,
+                           @PathVariable String crytoSymbol){
+        userService.deleteCoinFromPortfolio(id, crytoSymbol);
+    }
 }
