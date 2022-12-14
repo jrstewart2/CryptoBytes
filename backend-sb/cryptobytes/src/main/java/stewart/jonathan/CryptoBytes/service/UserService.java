@@ -9,7 +9,6 @@ import stewart.jonathan.CryptoBytes.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserService {
@@ -51,8 +50,9 @@ public class UserService {
     public void addCryptoToPortfolio(Long id, Crypto crypto) {
         User user = getProfile(id);
         List<Crypto> userPortfolio = user.getCryptos();
+        crypto.setUser(user);
         userPortfolio.add(crypto);
-        user.addCryptos(userPortfolio);
+        user.setCryptos(userPortfolio);
         userRepository.save(user);
     }
 
@@ -73,6 +73,5 @@ public class UserService {
         coin.setUser(null);
         user.setCryptos(portfolio);
         userRepository.save(user);
-
     }
 }
