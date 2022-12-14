@@ -1,35 +1,29 @@
 package stewart.jonathan.CryptoBytes.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.lang.NonNull;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
-import java.io.Serializable;
-import java.util.Set;
-import java.util.UUID;
-
+import java.util.List;
 
 @Entity
-@Table(name = "users")
-public class User{
+@Table(name = "user")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
-    @NonNull
     private String username;
-    @NonNull
     private String email;
-    @NonNull
     private String password;
     private String role;
 
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-//    @JsonIgnore
-    private Set<Portfolio> portfolio;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private List<Crypto> cryptos;
 
-    public User() {}
+    public User() {    }
 
     public User(String username, String email, String password, String role) {
         this.username = username;
@@ -38,12 +32,13 @@ public class User{
         this.role = role;
     }
 
-    public void setId(long id) {
-        this.id = id;
+
+    public Long getId() {
+        return id;
     }
 
-    public long getId() {
-        return id;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getUsername() {
@@ -70,30 +65,30 @@ public class User{
         this.password = password;
     }
 
+    public String getRole() {
+        return role;
+    }
+
     public void setRole(String role) {
         this.role = role;
     }
 
-    public String getRole() {
-        return this.role;
+    public List<Crypto> getCryptos() {
+        return cryptos;
     }
 
-    public Set<Portfolio> getPortfolio() {
-        return portfolio;
-    }
-
-    public void setPortfolio(Set<Portfolio> portfolio) {
-        this.portfolio = portfolio;
+    public void setCryptos(List<Crypto> cryptos) {
+        this.cryptos = cryptos;
     }
 
     @Override
     public String toString() {
         return "User{" +
-                "id='" + id + '\'' +
+                "id=" + id +
                 ", username='" + username + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
-                ", role='" + role + '\'' +
+                ", cryptos=" + cryptos +
                 '}';
     }
 }
