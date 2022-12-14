@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/test/users")
+@RequestMapping("/api/users")
 public class UserController {
 
     private final UserService userService;
@@ -19,36 +19,13 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getAllUsers() {
+    public List<User> getAllUserProfiles() {
         return userService.getUsers();
     }
 
     @GetMapping("/{id}")
-    public User getCryptoByUserId(@PathVariable Long id){
+    public User getUserProfileById(@PathVariable Long id){
         return userService.getProfile(id);
     }
 
-    @GetMapping("/portfolio/{id}")
-    public List<Crypto> getPortfolioForUser(@PathVariable Long id){
-        return userService.getPortfolioForUser(id);
-    }
-
-    @PostMapping("/portfolio/{id}")
-    public void addNewCrypto(@PathVariable Long id,
-                                @RequestBody Crypto crypto) {
-        userService.addCryptoToPortfolio(id, crypto);
-    }
-
-    @PatchMapping("/portfolio/{id}/{cryptoSymbol}")
-    public Crypto updateCoin(@PathVariable long id,
-                             @PathVariable String cryptoSymbol,
-                             @RequestBody Crypto crypto) {
-        return userService.updateCoinInPortfolio(id, cryptoSymbol, crypto);
-    }
-
-    @DeleteMapping("/portfolio/{id}/{crytoSymbol}")
-    public void deleteCoin(@PathVariable long id,
-                           @PathVariable String crytoSymbol){
-        userService.deleteCoinFromPortfolio(id, crytoSymbol);
-    }
 }
