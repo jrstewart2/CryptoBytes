@@ -24,43 +24,36 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-import stewart.jonathan.CryptoBytes.service.CustomUserDetailService;
+//import stewart.jonathan.CryptoBytes.service.CustomUserDetailService;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-    private final RsaKeyProperties rsaKeys;
-    private final CustomUserDetailService customUserDetailService;
-    //    private final UserDetailsService userDetailsService;
-//    private final UserAuthentication userAuthentication;
+//    private final RsaKeyProperties rsaKeys;
+//    private final CustomUserDetailService customUserDetailService;
 
 
-    @Autowired
-    public SecurityConfig(RsaKeyProperties rsaKeys, CustomUserDetailService customUserDetailService) {
-        this.rsaKeys = rsaKeys;
-        this.customUserDetailService = customUserDetailService;
-    }
 
 //    @Autowired
-//    public SecurityConfig(UserDetailsService userDetailsService, UserAuthentication userAuthentication, PasswordHasher passwordHasher) {
-//        this.userDetailsService = userDetailsService;
-//        this.userAuthentication = userAuthentication;
-//        this.passwordHasher = passwordHasher;
+//    public SecurityConfig(RsaKeyProperties rsaKeys, CustomUserDetailService customUserDetailService) {
+//        this.rsaKeys = rsaKeys;
+//        this.customUserDetailService = customUserDetailService;
 //    }
 
-    @Bean
-    JwtDecoder jwtDecoder() {
-        return NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
-    }
 
-    @Bean
-    JwtEncoder jwtEncoder() {
-        JWK jwk = new RSAKey.Builder(rsaKeys.publicKey()).privateKey(rsaKeys.privateKey()).build();
-        JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
-        return new NimbusJwtEncoder(jwks);
-    }
+//    @Bean
+//    JwtDecoder jwtDecoder() {
+//        return NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
+//    }
+//
+//    @Bean
+//    JwtEncoder jwtEncoder() {
+//        JWK jwk = new RSAKey.Builder(rsaKeys.publicKey()).privateKey(rsaKeys.privateKey()).build();
+//        JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
+//        return new NimbusJwtEncoder(jwks);
+//    }
 
 //    @Bean
 //    public void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -85,14 +78,14 @@ public class SecurityConfig {
                         .antMatchers("/api/users/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                .userDetailsService(customUserDetailService)
-                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
-                .formLogin()
-                .and()
-                .httpBasic(Customizer.withDefaults())
+                //.userDetailsService(customUserDetailService)
+                //.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+                //.formLogin()
+                //.and()
+                //.httpBasic(Customizer.withDefaults())
                 //.logout().and()
-                .oauth2Login().and()
-                .headers(headers -> headers.frameOptions().sameOrigin())
+                //.oauth2Login().and()
+                //.headers(headers -> headers.frameOptions().sameOrigin())
                 .build();
     }
 
@@ -101,28 +94,5 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-
-    //   @Bean
-//    CorsConfigurationSource corsConfigurationSource() {
-//        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000"));
-//        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "DELETE", "PATCH", "HEAD", "OPTIONS"));
-//        configuration.setMaxAge(10L);
-//        configuration.setAllowedHeaders(Arrays.asList("Authorization"));
-//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-//        source.registerCorsConfiguration("/**", configuration);
-//        return source;
-//    }
-
-//    @Bean
-//    public InMemoryUserDetailsManager user() {
-//        return new InMemoryUserDetailsManager(
-//                User.withUsername("admin")
-//                        .password("{noop}password")
-//                        .authorities("read")
-//                        .roles("ADMIN")
-//                        .build()
-//        );
-//    }
 
 }

@@ -1,55 +1,27 @@
 package stewart.jonathan.CryptoBytes.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
-import stewart.jonathan.CryptoBytes.model.Portfolio;
-import stewart.jonathan.CryptoBytes.service.PortfolioService;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import stewart.jonathan.CryptoBytes.model.Crypto;
+import stewart.jonathan.CryptoBytes.repository.CryptoRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/portfolio")
-@CrossOrigin(origins = "http://localhost:3000")
+@RequestMapping("/portfolio")
 public class PortfolioController {
 
-    private final PortfolioService portfolioService;
+    private final CryptoRepository cryptoRepository;
 
     @Autowired
-    public PortfolioController(PortfolioService portfolioService) {
-        this.portfolioService = portfolioService;
+    public PortfolioController(CryptoRepository cryptoRepository) {
+        this.cryptoRepository = cryptoRepository;
     }
 
     @GetMapping
-    public List<Portfolio> getPortfolio() {
-        return portfolioService.getPortfolio();
+    public List<Crypto> getAllCrypto() {
+        return cryptoRepository.findAll();
     }
-
-    @GetMapping("/{id}")
-    public Portfolio getPortfolioById(@PathVariable long id) {
-        return portfolioService.getPortfolioById(id);
-    }
-
-    @ResponseStatus(HttpStatus.OK)
-    @PostMapping
-    public void addCoinToPortfolio(@RequestBody Portfolio portfolio) {
-        portfolioService.addCoin(portfolio);
-    }
-
-    @ResponseStatus(HttpStatus.OK)
-    @PatchMapping("/{id}")
-    public void updateCoin(@PathVariable Long id,
-                           @RequestBody Portfolio portfolio) {
-        portfolioService.updateCoin(id, portfolio);
-    }
-
-    @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping("/{id}")
-    public void removeCoinFromPortfolio(@PathVariable Long id){
-        portfolioService.removeCoin(id);
-    }
-
-
 }
