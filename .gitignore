@@ -1,20 +1,10 @@
 HELP.md
 target/
-!.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
-./src/main/resources/application.yml
-./application.yml
-./src/main/resources/**
-!**/src/main/resources/application.yml
-/src/main/resources/application.yml
-/src/main/resources/certs/**
-/src/main/resources/certs/private.pem
-/src/main/resources/certs/public.pem
-./src/main/resources/certs/private.pem
-./src/main/resources/certs/public.pem
+
+/backend-sb/cryptobytes/src/main/resources/certs/private.pem
 ./backend-sb/cryptobytes/src/main/resources/certs/public.pem
-./backend-sb/cryptobytes/src/main/resources/certs/private.pem
+./backend-sb/cryptobytes/src/main/resources/**
+./backend-sb/cryptobytes/src/main/resources/application.yml
 
 ### STS ###
 .apt_generated

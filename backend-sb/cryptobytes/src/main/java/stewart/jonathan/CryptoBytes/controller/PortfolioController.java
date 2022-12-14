@@ -21,7 +21,7 @@ public class PortfolioController {
     }
 
     @GetMapping("/{id}")
-
+    @PreAuthorize(value = "isAuthenticated()")
     public List<Crypto> getPortfolioForUser(@PathVariable Long id){
         return userService.getPortfolioForUser(id);
     }
