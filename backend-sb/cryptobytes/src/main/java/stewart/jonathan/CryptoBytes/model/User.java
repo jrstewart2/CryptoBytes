@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -21,7 +22,7 @@ public class User {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JsonManagedReference
-    private List<Crypto> cryptos;
+    private List<Crypto> cryptos = new ArrayList<>();
 
     public User() {    }
 
@@ -79,6 +80,11 @@ public class User {
 
     public void setCryptos(List<Crypto> cryptos) {
         this.cryptos = cryptos;
+    }
+
+    public void addCryptos(List<Crypto> cryptos){
+        this.cryptos = cryptos;
+        cryptos.forEach(crypto -> crypto.setUser(this));
     }
 
     @Override
