@@ -24,36 +24,34 @@ import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.oauth2.jwt.NimbusJwtEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-//import stewart.jonathan.CryptoBytes.service.CustomUserDetailService;
+import stewart.jonathan.CryptoBytes.service.CustomUserDetailService;
 
 @Configuration
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
-//    private final RsaKeyProperties rsaKeys;
-//    private final CustomUserDetailService customUserDetailService;
+    private final RsaKeyProperties rsaKeys;
+    private final CustomUserDetailService customUserDetailService;
+
+    @Autowired
+    public SecurityConfig(RsaKeyProperties rsaKeys, CustomUserDetailService customUserDetailService) {
+        this.rsaKeys = rsaKeys;
+        this.customUserDetailService = customUserDetailService;
+    }
 
 
+    @Bean
+    JwtDecoder jwtDecoder() {
+        return NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
+    }
 
-//    @Autowired
-//    public SecurityConfig(RsaKeyProperties rsaKeys, CustomUserDetailService customUserDetailService) {
-//        this.rsaKeys = rsaKeys;
-//        this.customUserDetailService = customUserDetailService;
-//    }
-
-
-//    @Bean
-//    JwtDecoder jwtDecoder() {
-//        return NimbusJwtDecoder.withPublicKey(rsaKeys.publicKey()).build();
-//    }
-//
-//    @Bean
-//    JwtEncoder jwtEncoder() {
-//        JWK jwk = new RSAKey.Builder(rsaKeys.publicKey()).privateKey(rsaKeys.privateKey()).build();
-//        JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
-//        return new NimbusJwtEncoder(jwks);
-//    }
+    @Bean
+    JwtEncoder jwtEncoder() {
+        JWK jwk = new RSAKey.Builder(rsaKeys.publicKey()).privateKey(rsaKeys.privateKey()).build();
+        JWKSource<SecurityContext> jwks = new ImmutableJWKSet<>(new JWKSet(jwk));
+        return new NimbusJwtEncoder(jwks);
+    }
 
 //    @Bean
 //    public void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -67,25 +65,21 @@ public class SecurityConfig {
                 .cors().and()
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        //.antMatchers("/resources/static/**", "/index", "/", "/home", "/token").permitAll()
-                        //.antMatchers("/api/portfolio").permitAll()
-                                //.antMatchers("/api/**").permitAll()
-                        //.antMatchers("/api/portfolio").hasAnyRole("USER", "ADMIN")
-                        //.antMatchers("/api/users").hasAnyRole("ADMIN")#
-                        .antMatchers("/test/**").permitAll()
+                        .antMatchers("/resources/static/**","/index", "/", "/home/**").permitAll()
                         .antMatchers("/api/auth/**").permitAll()
-                        .antMatchers("/home/**").permitAll()
-                        .antMatchers("/api/users/**").permitAll()
+                        .antMatchers("/api/portfolio").hasAnyRole("USER", "ADMIN")
+                        .antMatchers("/api/admin").hasAnyRole("ADMIN")
+                        .antMatchers("/test/**").permitAll()
                         .anyRequest().authenticated()
                 )
-                //.userDetailsService(customUserDetailService)
-                //.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
-                //.formLogin()
-                //.and()
-                //.httpBasic(Customizer.withDefaults())
-                //.logout().and()
-                //.oauth2Login().and()
-                //.headers(headers -> headers.frameOptions().sameOrigin())
+                .userDetailsService(customUserDetailService)
+                .oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt)
+                .formLogin()
+                .and()
+                .httpBasic(Customizer.withDefaults())
+                .logout().and()
+                .oauth2Login().and()
+                .headers(headers -> headers.frameOptions().sameOrigin())
                 .build();
     }
 

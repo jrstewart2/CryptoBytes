@@ -1,11 +1,11 @@
-#spring:
-#  security:
-#    oauth2:
-#      client:
-#        registration:
-#          facebook:
-#            client-id: 3421861474794311
-#            client-secret: 310fbc7dbd560543e973765efb45611e
-#          google:
-#            client-id: 91423826511-6gu5stbjf8kffja1tkjqhksjrhpiupen.apps.googleusercontent.com
-#            client-secret: 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
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          facebook:
+            client-id: 3421861474794311
+            client-secret: 310fbc7dbd560543e973765efb45611e
+          google:
+            client-id: 91423826511-6gu5stbjf8kffja1tkjqhksjrhpiupen.apps.googleusercontent.com
+            client-secret: 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

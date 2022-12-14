@@ -74,4 +74,8 @@ public class UserService {
         user.setCryptos(portfolio);
         userRepository.save(user);
     }
+
+    public void registerNewUser(User user){
+        userRepository.save(user);
+    }
 }
