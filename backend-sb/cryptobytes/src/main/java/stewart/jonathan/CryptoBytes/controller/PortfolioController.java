@@ -16,8 +16,6 @@ public class PortfolioController {
 
     private final UserService userService;
 
-
-
     @Autowired
     public PortfolioController(UserService userService) {
         this.userService = userService;
