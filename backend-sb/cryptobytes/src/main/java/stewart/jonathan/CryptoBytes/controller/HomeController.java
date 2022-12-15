@@ -1,6 +1,5 @@
 package stewart.jonathan.CryptoBytes.controller;
 
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,12 +16,5 @@ public class HomeController {
     public String home() {
         return "Welcome to CryptoBytes";
     }
-
-    @GetMapping("/user")
-    @PreAuthorize(value = "USER")
-    public String user() {
-        return "Welcome user to CryptoBytes";
-    }
-
 
 }
