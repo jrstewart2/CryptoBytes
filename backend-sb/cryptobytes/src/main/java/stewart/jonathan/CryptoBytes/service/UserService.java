@@ -22,6 +22,8 @@ public interface UserService {
 
     void deleteCoinFromPortfolio(String username, String cryptoSymbol);
 
+    boolean checkIfUserExists(String username);
+
     void registerNewUser(User user);
 
     void updateEmail(String username, User user);

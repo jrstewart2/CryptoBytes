@@ -1,6 +1,7 @@
 package stewart.jonathan.CryptoBytes.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import stewart.jonathan.CryptoBytes.model.Crypto;
 import stewart.jonathan.CryptoBytes.model.User;
@@ -9,17 +10,20 @@ import stewart.jonathan.CryptoBytes.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final CryptoRepository cryptoRepository;
+    private final PasswordEncoder encoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, CryptoRepository cryptoRepository) {
+    public UserServiceImpl(UserRepository userRepository, CryptoRepository cryptoRepository, PasswordEncoder encoder) {
         this.userRepository = userRepository;
         this.cryptoRepository = cryptoRepository;
+        this.encoder = encoder;
     }
 
     @Override
@@ -82,23 +86,33 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+    public boolean checkIfUserExists(String username) {
+        Optional<User> check = userRepository.findByUsername(username);
+        return check.isPresent();
+    }
+
     @Override
     public void registerNewUser(User user){
-        if (getProfile(user.getUsername()) != null){
+        if (checkIfUserExists(user.getUsername())){
             throw new IllegalArgumentException("Username unavailable. Please choose another");
+        } else if (user.getUsername() == null || user.getEmail() == null || user.getPassword() == null){
+            throw new IllegalArgumentException("You must provide a username, email and password to register");
         }
+        user.setPassword(encoder.encode(user.getPassword()));
+        user.setRole("USER");
         userRepository.save(user);
     }
 
     @Override
     public void updateEmail(String username, User user){
-        User currentUserDetails = getProfile(username);
-        if (user.getEmail() != null){
-            currentUserDetails.setEmail(user.getEmail());
-            userRepository.save(currentUserDetails);
-        } else {
-            throw new IllegalArgumentException("No email address found in request - user details not updated");
+        if (checkIfUserExists(username)) {
+            if (user.getEmail() != null) {
+                User currentUserDetails = getProfile(username);
+                currentUserDetails.setEmail(user.getEmail());
+                userRepository.save(currentUserDetails);
+            } else {
+                throw new IllegalArgumentException("No email address found in request - user details not updated");
+            }
         }
-
     }
 }

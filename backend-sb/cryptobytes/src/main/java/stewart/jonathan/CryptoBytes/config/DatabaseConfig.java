@@ -20,8 +20,6 @@ FOR DEVELOPMENT ONLY
 @Configuration
 public class DatabaseConfig {
 
-
-
     @Bean
     CommandLineRunner commandLineRunner(UserRepository userRepository,
                                         CryptoRepository cryptoRepository,
