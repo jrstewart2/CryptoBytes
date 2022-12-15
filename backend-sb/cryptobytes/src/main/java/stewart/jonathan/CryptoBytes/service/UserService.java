@@ -22,7 +22,9 @@ public interface UserService {
 
     void deleteCoinFromPortfolio(String username, String cryptoSymbol);
 
-    boolean checkIfUserExists(String username);
+    boolean checkIfUsernameExists(String username);
+
+    boolean checkIfEmailExists(String email);
 
     void registerNewUser(User user);
 

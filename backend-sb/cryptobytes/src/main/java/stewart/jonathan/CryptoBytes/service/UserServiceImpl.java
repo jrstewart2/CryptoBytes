@@ -86,15 +86,22 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
-    public boolean checkIfUserExists(String username) {
-        Optional<User> check = userRepository.findByUsername(username);
-        return check.isPresent();
+    public boolean checkIfUsernameExists(String username) {
+        Optional<User> checkUsername = userRepository.findByUsername(username);
+        return checkUsername.isPresent();
+    }
+
+    public boolean checkIfEmailExists(String email) {
+        Optional<User> checkEmail = userRepository.findByEmail(email);
+        return checkEmail.isPresent();
     }
 
     @Override
     public void registerNewUser(User user){
-        if (checkIfUserExists(user.getUsername())){
+        if (checkIfUsernameExists(user.getUsername())){
             throw new IllegalArgumentException("Username unavailable. Please choose another");
+        } else if (checkIfEmailExists(user.getEmail())){
+            throw new IllegalArgumentException("Email already registered");
         } else if (user.getUsername() == null || user.getEmail() == null || user.getPassword() == null){
             throw new IllegalArgumentException("You must provide a username, email and password to register");
         }
@@ -105,7 +112,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void updateEmail(String username, User user){
-        if (checkIfUserExists(username)) {
+        if (checkIfUsernameExists(username)) {
             if (user.getEmail() != null) {
                 User currentUserDetails = getProfile(username);
                 currentUserDetails.setEmail(user.getEmail());

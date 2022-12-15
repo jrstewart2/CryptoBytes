@@ -57,9 +57,9 @@ public class SecurityConfig {
                 .cors().and()
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .antMatchers("/api/admin").hasAnyRole("ADMIN")
-                        .antMatchers("/api/portfolio").hasAnyRole("USER", "ADMIN")
-                        .antMatchers("/api/users").hasAnyRole("USER", "ADMIN")
+//                        .antMatchers("/api/admin").hasRole("ADMIN")
+//                        .antMatchers("/api/portfolio/**").hasAnyRole("USER", "ADMIN")
+//                        .antMatchers("/api/users").hasAnyRole("USER", "ADMIN")
                         .antMatchers("/api/auth/**").permitAll()
                         .antMatchers("/resources/static/**","/index", "/", "/home/**").permitAll()
                         .antMatchers("/test/**").permitAll()

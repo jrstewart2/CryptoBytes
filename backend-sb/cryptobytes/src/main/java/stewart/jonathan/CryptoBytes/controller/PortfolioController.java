@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/portfolio")
+@PreAuthorize("#username == authentication.name")
 public class PortfolioController {
 
     private final UserService userService;
@@ -27,13 +28,13 @@ public class PortfolioController {
 
 
     @GetMapping("/{username}")
-    @PreAuthorize("#username == authentication.name")
+    //@PreAuthorize("#username == authentication.name")
     public List<Crypto> getPortfolioForUser(@PathVariable String username){
         return userService.getPortfolioForUser(username);
     }
 
     @PostMapping("/{username}")
-    @PreAuthorize("#username == authentication.name")
+    //@PreAuthorize("#username == authentication.name")
     public void addNewCrypto(@PathVariable String username,
                              @RequestBody Crypto crypto) {
         userService.addCryptoToPortfolio(username, crypto);
