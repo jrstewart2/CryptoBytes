@@ -1,5 +1,6 @@
 package stewart.jonathan.CryptoBytes.controller;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import stewart.jonathan.CryptoBytes.model.Crypto;
 import stewart.jonathan.CryptoBytes.model.User;
@@ -19,13 +20,15 @@ public class UserController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public List<User> getAllUserProfiles() {
         return userService.getUsers();
     }
 
-    @GetMapping("/{id}")
-    public User getUserProfileById(@PathVariable Long id){
-        return userService.getProfile(id);
+    @GetMapping("/{username}")
+    @PreAuthorize("#username == authentication.name")
+    public User getUserProfileByUsername(@PathVariable String username){
+        return userService.getProfile(username);
     }
 
 }

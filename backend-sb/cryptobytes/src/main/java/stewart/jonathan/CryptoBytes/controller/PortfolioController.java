@@ -1,10 +1,11 @@
 package stewart.jonathan.CryptoBytes.controller;
 
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import stewart.jonathan.CryptoBytes.model.Crypto;
-import stewart.jonathan.CryptoBytes.model.User;
+import stewart.jonathan.CryptoBytes.service.CustomUserDetailService;
 import stewart.jonathan.CryptoBytes.service.UserService;
 
 import java.util.List;
@@ -15,33 +16,43 @@ public class PortfolioController {
 
     private final UserService userService;
 
+
+
     @Autowired
     public PortfolioController(UserService userService) {
         this.userService = userService;
     }
 
-    @GetMapping("/{id}")
-
-    public List<Crypto> getPortfolioForUser(@PathVariable Long id){
-        return userService.getPortfolioForUser(id);
+    public boolean AuthorizeAccess(String username){
+        return true;
     }
 
-    @PostMapping("/{id}")
-    public void addNewCrypto(@PathVariable Long id,
+
+    @GetMapping("/{username}")
+    @PreAuthorize("#username == authentication.name")
+    public List<Crypto> getPortfolioForUser(@PathVariable String username){
+        return userService.getPortfolioForUser(username);
+    }
+
+    @PostMapping("/{username}")
+    @PreAuthorize("#username == authentication.name")
+    public void addNewCrypto(@PathVariable String username,
                              @RequestBody Crypto crypto) {
-        userService.addCryptoToPortfolio(id, crypto);
+        userService.addCryptoToPortfolio(username, crypto);
     }
 
-    @PatchMapping("/{id}/{cryptoSymbol}")
-    public Crypto updateCoin(@PathVariable long id,
+    @PatchMapping("/{username}/{cryptoSymbol}")
+    @PreAuthorize("#username == authentication.name")
+    public Crypto updateCoin(@PathVariable String username,
                              @PathVariable String cryptoSymbol,
                              @RequestBody Crypto crypto) {
-        return userService.updateCoinInPortfolio(id, cryptoSymbol, crypto);
+        return userService.updateCoinInPortfolio(username, cryptoSymbol, crypto);
     }
 
-    @DeleteMapping("/{id}/{cryptoSymbol}")
-    public void deleteCoin(@PathVariable long id,
+    @DeleteMapping("/{username}/{cryptoSymbol}")
+    @PreAuthorize("#username == authentication.name")
+    public void deleteCoin(@PathVariable String username,
                            @PathVariable String cryptoSymbol){
-        userService.deleteCoinFromPortfolio(id, cryptoSymbol);
+        userService.deleteCoinFromPortfolio(username, cryptoSymbol);
     }
 }

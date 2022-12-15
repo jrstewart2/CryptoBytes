@@ -26,15 +26,15 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User getProfile(Long id){
+    public User getProfile(String username){
         return getUsers().stream()
-                .filter(u -> id.equals(u.getId()))
+                .filter(u -> username.equals(u.getUsername()))
                 .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("User with ID " + id + " not found"));
+                .orElseThrow(() -> new IllegalArgumentException("User with ID " + username + " not found"));
     }
 
-    public List<Crypto> getPortfolioForUser(Long id){
-        return getProfile(id).getCryptos();
+    public List<Crypto> getPortfolioForUser(String username){
+        return getProfile(username).getCryptos();
     }
 
     public Crypto getCryptoFromPortfolio(String symbol, List<Crypto> portfolio){
@@ -47,8 +47,8 @@ public class UserService {
     }
 
     @Transactional
-    public void addCryptoToPortfolio(Long id, Crypto crypto) {
-        User user = getProfile(id);
+    public void addCryptoToPortfolio(String username, Crypto crypto) {
+        User user = getProfile(username);
         List<Crypto> userPortfolio = user.getCryptos();
         crypto.setUser(user);
         userPortfolio.add(crypto);
@@ -56,16 +56,16 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public Crypto updateCoinInPortfolio(long id, String cryptoSymbol, Crypto crypto) {
-        User user = getProfile(id);
+    public Crypto updateCoinInPortfolio(String username, String cryptoSymbol, Crypto crypto) {
+        User user = getProfile(username);
         Crypto coin = getCryptoFromPortfolio(cryptoSymbol, user.getCryptos());
         coin.setCoins(crypto.getCoins());
         userRepository.save(user);
         return coin;
     }
 
-    public void deleteCoinFromPortfolio(long id, String cryptoSymbol) {
-        User user = getProfile(id);
+    public void deleteCoinFromPortfolio(String username, String cryptoSymbol) {
+        User user = getProfile(username);
         List<Crypto> portfolio = user.getCryptos();
 
         Crypto coin = getCryptoFromPortfolio(cryptoSymbol, portfolio);
