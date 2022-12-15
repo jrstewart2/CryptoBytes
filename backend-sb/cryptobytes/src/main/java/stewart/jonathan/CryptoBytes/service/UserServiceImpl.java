@@ -84,6 +84,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerNewUser(User user){
+        if (getProfile(user.getUsername()) != null){
+            throw new IllegalArgumentException("Username unavailable. Please choose another");
+        }
         userRepository.save(user);
+    }
+
+    @Override
+    public void updateEmail(String username, User user){
+        User currentUserDetails = getProfile(username);
+        if (user.getEmail() != null){
+            currentUserDetails.setEmail(user.getEmail());
+            userRepository.save(currentUserDetails);
+        } else {
+            throw new IllegalArgumentException("No email address found in request - user details not updated");
+        }
+
     }
 }

@@ -23,4 +23,6 @@ public interface UserService {
     void deleteCoinFromPortfolio(String username, String cryptoSymbol);
 
     void registerNewUser(User user);
+
+    void updateEmail(String username, User user);
 }
