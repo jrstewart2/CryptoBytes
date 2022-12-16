@@ -29,13 +29,13 @@ const SignUp = () => {
     const submit = () => {
         // console.log("UN: ", username);
         // console.log("PW: ", password);
-        axios.post("http://localhost:4417/register", {
+        axios.post("http://localhost:8080/api/auth/register", {
             username: username,
             email: email,
             password: password
         })
         .then(res => {
-            if (res.data) {
+            if (res.status == 200) {
                 navigate("/login");    
             } else {
                 setStatus("Failed");   

@@ -37,4 +37,9 @@ public class AuthController {
         LOG.debug("Token granted: '{}', token");
         return token;
     }
+
+    @GetMapping("/login")
+    public String login(Authentication authentication){
+        return userService.getUsername(authentication.getName());
+    }
 }

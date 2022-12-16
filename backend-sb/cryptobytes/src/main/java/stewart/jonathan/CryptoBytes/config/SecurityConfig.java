@@ -62,7 +62,7 @@ public class SecurityConfig {
 //                        .antMatchers("/api/users").hasAnyRole("USER", "ADMIN")
                         .antMatchers("/api/auth/**").permitAll()
                         .antMatchers("/resources/static/**","/index", "/", "/home/**").permitAll()
-                        .antMatchers("/test/**").permitAll()
+                        //.antMatchers("/test/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(customUserDetailService)

@@ -23,13 +23,13 @@ const Edit = () => {
         let body = {
             crypto: amount
         }
-        axios.put(`http://localhost:8080/portfolio/${id}`, body)
+        axios.patch(`http://localhost:8080/api/portfolio/${id}`, body)
         .then(response => console.log(response.data));
     }
 
     useEffect(() => {
         const getCrypto = async () => {
-            const res = await axios.get(`http://localhost:4417/getPortfolio/${id}`);
+            const res = await axios.get(`http://localhost:8080/api/portfolio/${id}`);
             console.log(res.data[0]);
             setCrypto(res.data[0]);
         };

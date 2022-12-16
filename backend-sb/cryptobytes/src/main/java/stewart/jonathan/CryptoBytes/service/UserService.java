@@ -9,11 +9,15 @@ import java.util.List;
 public interface UserService {
     List<User> getUsers();
 
+    String getUsername(String authenticatedUsername);
+
     User getProfile(String username);
 
     List<Crypto> getPortfolioForUser(String username);
 
     Crypto getCryptoFromPortfolio(String symbol, List<Crypto> portfolio);
+
+    Crypto getSingleCoin(String username, String symbol);
 
     @Transactional
     void addCryptoToPortfolio(String username, Crypto crypto);

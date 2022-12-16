@@ -7,23 +7,32 @@ import Nav from './Nav.jsx'
 
 const Portfolio = () => {
     const [portfolio, setPortfolio] = useState([]);
+    const [authUsername, setAuthUser] = useState("")
 
     useEffect(() => {
         const getPortfolio = async () => {
-            const response = await axios.get('http://localhost:8080/portfolio');
+            const token = localStorage.getItem('token');
+            const username = localStorage.getItem('username');
+            const portfolioEndpoint = `http://localhost:8080/api/portfolio/${username}`;
+
+            //console.log(token);
+            const response = await axios.get(portfolioEndpoint, {
+                headers: {Authorization: `Bearer ${token}`},})
+            
             const data = response.data;
             let clonePortfolio = [];
             for (let i = 0; i < data.length; i++){
                 let newCrypto = {
-                    symbol: data[i]._id,
+                    symbol: data[i].symbol,
                     name: data[i].name,
-                    crypto: data[i].crypto
+                    crypto: data[i].coins
                 }
 
                 clonePortfolio.push(newCrypto);
                 
             }
             setPortfolio(clonePortfolio);
+            setAuthUser(username);
         };
     getPortfolio();
     }, []);
@@ -33,6 +42,7 @@ const Portfolio = () => {
         <div>
             <Nav />      
             <br />
+            <h3 className='h3'>{authUsername}'s Portfolio'</h3>
             <Container>
               <Row xs={'auto'} md={'auto'} className="g-4">
                 {

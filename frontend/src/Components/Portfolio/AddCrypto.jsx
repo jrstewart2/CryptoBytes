@@ -2,12 +2,13 @@ import Nav from './Nav.jsx'
 import { useState } from 'react';
 import axios from 'axios';
 import { Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const AddCrypto = () => {
     const [symbol, setSymbol] = useState("");
     const [name, setName] = useState("");
     const [coins, setCoins] = useState("");
+    const navigate = useNavigate();
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -29,13 +30,18 @@ const AddCrypto = () => {
     const createObject = () => {
 
         let newCryptoObject = {
-            _id: symbol,
+            symbol: symbol,
             name: name,
-            crypto: coins
+            coins: coins
         }
 
-        axios.post('http://localhost:8080/portfolio', newCryptoObject)
-        .then(response => console.log(response));
+        const token = localStorage.getItem('token');
+        const authUser = localStorage.getItem('username')
+        const postURL = `http://localhost:8080/api/portfolio/${authUser}`;
+
+        axios.post(postURL, newCryptoObject, {
+            headers: {Authorization: `Bearer ${token}`},})
+        navigate("/portfolio");
     }
 
     return (

@@ -4,21 +4,35 @@ import axios from 'axios';
 import Nav from './Nav.jsx';
 import Details from './Details.jsx';
 import { Button, Container, Row } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Remove = () => {
     const { id } = useParams();
     const [crypto, setCrypto] = useState();
+    const [authUser, setAuthUser] = useState("");
+    const [token, setToken] = useState("");
+    const [url, setUrl] = useState("");
+    const navigate = useNavigate();
 
     const removeCrypto = () => {
-        axios.delete(`http://localhost:4417/delete/${id}`)
-        .then(response => console.log(response));
+
+        const deleteResponse = axios.delete(url, {}, {
+            headers: {Authorization: `Bearer ${token}`},})
+        console.log(deleteResponse);
+        navigate("/portfolio");
     }
 
+
     useEffect(() => {
+
+        setToken(localStorage.getItem('token'));
+        setAuthUser(localStorage.getItem('username'));
+        const cryptoURL = `http://localhost:8080/api/portfolio/${authUser}/${id}`
+        setUrl(cryptoURL);
+        
         const getCrypto = async () => {
-            const res = await axios.get(`http://localhost:8080/portfolio/${id}`);
-            console.log(res.data[0]);
+            const res = await axios.get(url, {}, {
+                headers: {Authorization: `Bearer ${token}`},})
             setCrypto(res.data[0]);
         };
         getCrypto();

@@ -27,6 +27,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public String getUsername(String authenticatedUsername){
+        User user = getProfile(authenticatedUsername);
+        return user.getUsername();
+    }
+
+    @Override
     public List<User> getUsers(){
         return userRepository.findAll();
     }
@@ -121,5 +127,11 @@ public class UserServiceImpl implements UserService {
                 throw new IllegalArgumentException("No email address found in request - user details not updated");
             }
         }
+    }
+
+    @Override
+    public Crypto getSingleCoin(String username, String symbol){
+        List<Crypto> portfolio = getPortfolioForUser(username);
+        return getCryptoFromPortfolio(symbol, portfolio);
     }
 }
