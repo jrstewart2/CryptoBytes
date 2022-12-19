@@ -18,6 +18,7 @@ import News from './Components/News/News.jsx'
 import Home from './Components/Home.jsx'
 import Signup from './Components/Auth/Sign-up.jsx'
 import Login from './Components/Auth/Login.jsx'
+import Loggedin from './Components/Auth/Loggedin';
 
 
 function App() {
@@ -48,6 +49,7 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/signup" element={<Signup />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/loggedin" element={<Loggedin />} />
             <Route path="/portfolio" element={<Portfolio />} />
             <Route path="/portfolio/edit/:id" element={<Edit />} />
             <Route path="/portfolio/remove/:id" element={<Remove />} />

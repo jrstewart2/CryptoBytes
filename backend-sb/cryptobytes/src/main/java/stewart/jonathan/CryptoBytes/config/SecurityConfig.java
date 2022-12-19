@@ -50,11 +50,6 @@ public class SecurityConfig {
         return new NimbusJwtEncoder(jwks);
     }
 
-//    @Bean
-//    public void configure(AuthenticationManagerBuilder auth) throws Exception {
-//        auth.userDetailsService(userDetailsService).passwordEncoder(passwordHasher);
-//    }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
@@ -62,11 +57,12 @@ public class SecurityConfig {
                 .cors().and()
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .antMatchers("/resources/static/**","/index", "/", "/home/**").permitAll()
+//                        .antMatchers("/api/admin").hasRole("ADMIN")
+//                        .antMatchers("/api/portfolio/**").hasAnyRole("USER", "ADMIN")
+//                        .antMatchers("/api/users").hasAnyRole("USER", "ADMIN")
                         .antMatchers("/api/auth/**").permitAll()
-                        .antMatchers("/api/portfolio").hasAnyRole("USER", "ADMIN")
-                        .antMatchers("/api/admin").hasAnyRole("ADMIN")
-                        .antMatchers("/test/**").permitAll()
+                        .antMatchers("/resources/static/**","/index", "/", "/home/**").permitAll()
+                        //.antMatchers("/test/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .userDetailsService(customUserDetailService)

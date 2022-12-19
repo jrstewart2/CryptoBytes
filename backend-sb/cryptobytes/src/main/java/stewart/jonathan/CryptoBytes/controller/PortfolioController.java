@@ -12,37 +12,35 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/portfolio")
+@CrossOrigin(origins = "http://localhost:3000")
+@PreAuthorize("#username == authentication.name")
 public class PortfolioController {
 
     private final UserService userService;
-
-
 
     @Autowired
     public PortfolioController(UserService userService) {
         this.userService = userService;
     }
 
-    public boolean AuthorizeAccess(String username){
-        return true;
-    }
-
-
     @GetMapping("/{username}")
-    @PreAuthorize("#username == authentication.name")
     public List<Crypto> getPortfolioForUser(@PathVariable String username){
         return userService.getPortfolioForUser(username);
     }
 
+    @GetMapping("/{username}/{symbol}")
+    public Crypto getSingleCoin(@PathVariable String username,
+                                @PathVariable String symbol){
+        return userService.getSingleCoin(username, symbol);
+    }
+
     @PostMapping("/{username}")
-    @PreAuthorize("#username == authentication.name")
     public void addNewCrypto(@PathVariable String username,
                              @RequestBody Crypto crypto) {
         userService.addCryptoToPortfolio(username, crypto);
     }
 
     @PatchMapping("/{username}/{cryptoSymbol}")
-    @PreAuthorize("#username == authentication.name")
     public Crypto updateCoin(@PathVariable String username,
                              @PathVariable String cryptoSymbol,
                              @RequestBody Crypto crypto) {
@@ -50,7 +48,6 @@ public class PortfolioController {
     }
 
     @DeleteMapping("/{username}/{cryptoSymbol}")
-    @PreAuthorize("#username == authentication.name")
     public void deleteCoin(@PathVariable String username,
                            @PathVariable String cryptoSymbol){
         userService.deleteCoinFromPortfolio(username, cryptoSymbol);

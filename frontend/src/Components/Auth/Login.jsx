@@ -26,19 +26,20 @@ const Login = () => {
     }
 
     const submit = () => {
-        // console.log("UN: ", username)
-        // console.log("PW: ", password)
-        axios.post("http://localhost:4417/login", {
-            username: username,
-            password: password
-        })
+
+        const tokenURL = "http://localhost:8080/api/auth/token";
+        const data = {}
+        const encoded = btoa(`${username}:${password}`)
+
+        axios.post(tokenURL, data, {
+            headers: {Authorization: `Basic ${encoded}`},})
         .then(res => {
-            console.log("RES: ", res)
-            if (res.data === "Login failed") {
-                setStatus(res.data); 
+            if (res.status == 200) {
+                const token = res.data;
+                localStorage.setItem("token", token);
+                navigate("/loggedin");
             } else {
-                setStatus(res.data); 
-                navigate("/");   
+                setStatus("Failed"); 
             } 
         })
         console.log("STATUS: ", status)

@@ -20,16 +20,14 @@ FOR DEVELOPMENT ONLY
 @Configuration
 public class DatabaseConfig {
 
-
-
     @Bean
     CommandLineRunner commandLineRunner(UserRepository userRepository,
                                         CryptoRepository cryptoRepository,
                                         PasswordEncoder encoder) {
         return args -> {
             // CREATE 2 USERS
-            User nonAdmin = new User("user","user@email.com",encoder.encode("password"),"USER");
-            User admin = new User("admin","admin@email.com",encoder.encode("password"),"ADMIN");
+            User nonAdmin = new User("bob","user@email.com",encoder.encode("password"),"USER");
+            User admin = new User("jim","admin@email.com",encoder.encode("password"),"ADMIN");
 
            // ADD CRYPTO FOR USER
             Crypto userBtc = new Crypto("BTC","Bitcoin",0.123,nonAdmin);

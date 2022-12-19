@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/users")
+@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     private final UserService userService;
@@ -19,16 +20,17 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public List<User> getAllUserProfiles() {
-        return userService.getUsers();
-    }
-
     @GetMapping("/{username}")
     @PreAuthorize("#username == authentication.name")
     public User getUserProfileByUsername(@PathVariable String username){
         return userService.getProfile(username);
+    }
+
+    @PatchMapping("/{username}")
+    @PreAuthorize("#username == authentication.name")
+    public void updateEmailAddress(@PathVariable String username,
+                                   @RequestBody User user){
+        userService.updateEmail(username, user);
     }
 
 }
