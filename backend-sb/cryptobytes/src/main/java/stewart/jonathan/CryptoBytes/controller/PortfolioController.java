@@ -23,11 +23,6 @@ public class PortfolioController {
         this.userService = userService;
     }
 
-    public boolean AuthorizeAccess(String username){
-        return true;
-    }
-
-
     @GetMapping("/{username}")
     public List<Crypto> getPortfolioForUser(@PathVariable String username){
         return userService.getPortfolioForUser(username);

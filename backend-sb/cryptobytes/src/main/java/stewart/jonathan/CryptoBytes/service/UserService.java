@@ -33,4 +33,6 @@ public interface UserService {
     void registerNewUser(User user);
 
     void updateEmail(String username, User user);
+
+    void promoteUser(String username);
 }

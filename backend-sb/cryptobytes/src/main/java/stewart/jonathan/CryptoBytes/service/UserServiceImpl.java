@@ -134,4 +134,11 @@ public class UserServiceImpl implements UserService {
         List<Crypto> portfolio = getPortfolioForUser(username);
         return getCryptoFromPortfolio(symbol, portfolio);
     }
+
+    @Override
+    public void promoteUser(String username) {
+        User user = getProfile(username);
+        user.setRole("ADMIN");
+        userRepository.save(user);
+    }
 }
